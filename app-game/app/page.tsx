@@ -1,11 +1,21 @@
-import Image from "next/image";
-
-export default function Home() {
+export default function GamePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main >
-        hello world hi
-      </main>
+    <div className="pt-8 flex flex-col items-center">
+      <h1 className="text-4xl font-extrabold tracking-wide">
+        🎮 App Game
+      </h1>
     </div>
   );
 }
+<h1 className="text-4xl font-extrabold tracking-widest text-green-400 drop-shadow-lg">
+  APP GAME
+</h1>
+<div className="text-center">
+  <h1 className="text-4xl font-extrabold tracking-widest text-green-400">
+    APP GAME
+  </h1>
+  <p className="text-zinc-400 mt-2">
+    Tippe schnell. Gewinne Punkte.
+  </p>
+</div>
+
