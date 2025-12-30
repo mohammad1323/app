@@ -28,7 +28,6 @@ export default function BottomNav() {
 
       <nav className="fixed bottom-0 left-0 right-0 bg-zinc-800 border-t border-zinc-700 z-40">
         <div className="flex justify-around py-3">
-
           <Link href="/" className={linkClass("/")}>
             <span className="text-xl">🏠</span>
             Start
@@ -43,7 +42,6 @@ export default function BottomNav() {
             <span className="text-xl">👤</span>
             Profil
           </Link>
-
         </div>
       </nav>
     </>
