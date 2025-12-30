@@ -9,16 +9,6 @@ export default function GamePage() {
           🪙 0
         </div>
       </div>
-
-
-      <div className="mt-12 flex justify-center">
-        <div className="w-full max-w-sm bg-zinc-800 rounded-2xl p-6 text-center">
-          <p className="text-zinc-300">
-           Start Game
-          </p>
-        </div>
-      </div>
-
     </div>
   );
 }
