@@ -5,11 +5,8 @@ export default function GamePage() {
         <h1 className="text-3xl font-extrabold text-green-400">
           MOHAMMADS GAME
         </h1>
-        <div className="bg-zinc-800 px-4 py-2 rounded-xl">
-          🪙 0
-        </div>
+        <div className="bg-zinc-800 px-4 py-2 rounded-xl">🪙 0</div>
       </div>
     </div>
   );
 }
-

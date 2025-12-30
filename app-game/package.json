@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write .",
+    "test": "jest"
   },
   "dependencies": {
     "next": "16.1.1",
@@ -18,8 +20,17 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "latest",
     "eslint-config-next": "16.1.1",
+    "prettier": "latest",
+    "@typescript-eslint/parser": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "eslint-plugin-react": "latest",
+    "jest": "latest",
+    "ts-jest": "latest",
+    "@types/jest": "latest",
+    "@testing-library/react": "latest",
+    "@testing-library/jest-dom": "latest",
     "tailwindcss": "^4",
     "typescript": "5.9.3"
   }

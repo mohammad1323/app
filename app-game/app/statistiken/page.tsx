@@ -35,9 +35,7 @@ export default function Page() {
             className="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-xl backdrop-blur"
           >
             <div className="mb-2 flex justify-between">
-              <span className="text-sm text-slate-400">
-                {stat.title}
-              </span>
+              <span className="text-sm text-slate-400">{stat.title}</span>
             </div>
             <div className={`text-3xl font-bold ${stat.color}`}>
               {stat.value.toLocaleString("de-DE")}
