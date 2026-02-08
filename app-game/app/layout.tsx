@@ -5,6 +5,14 @@ import BottomNav from "./components/BottomNav";
 export const metadata = {
   title: "Snake Game - Mohammads Game",
   description: "Ein spannendes Snake-Spiel mit verschiedenen Modi und Skins",
+  viewport:
+    "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+  themeColor: "#000000",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Snake Game",
+  },
 };
 
 export default function RootLayout({
@@ -14,10 +22,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de" className="h-full">
-      <body className="bg-zinc-900 text-white antialiased h-full overflow-hidden">
-        <div className="flex flex-col h-full">
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+        <meta name="mobile-web-app-capable" content="yes" />
+      </head>
+      <body className="bg-black text-white antialiased h-full overflow-hidden">
+        <div className="flex flex-col h-full w-full">
           <TopNav />
-          <main className="flex-1 overflow-y-auto pb-20">{children}</main>
+          <main className="flex-1 overflow-hidden w-full h-full">
+            {children}
+          </main>
           <BottomNav />
         </div>
       </body>

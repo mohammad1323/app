@@ -55,15 +55,14 @@ export default function StatistikenPage() {
   return (
     <div className="h-full w-full px-8 py-8">
       <div className="max-w-[1920px] mx-auto h-full">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-500 bg-clip-text text-transparent mb-3">
             Statistiken
           </h1>
-          <p className="text-xl text-zinc-400">Deine Spielleistung im Überblick</p>
+          <p className="text-xl text-zinc-400">
+            Deine Spielleistung im Überblick
+          </p>
         </div>
-
-        {/* Stats Grid - Full Width */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {stats.map((stat, index) => (
             <div
@@ -86,9 +85,7 @@ export default function StatistikenPage() {
                 <span className="text-3xl">{stat.icon}</span>
                 <div className="text-right">
                   <p className="text-xs text-zinc-400 mb-1">{stat.title}</p>
-                  <p
-                    className={`text-3xl md:text-4xl font-bold ${stat.color}`}
-                  >
+                  <p className={`text-3xl md:text-4xl font-bold ${stat.color}`}>
                     {typeof stat.value === "number"
                       ? stat.value.toLocaleString("de-DE")
                       : stat.value}
@@ -99,7 +96,6 @@ export default function StatistikenPage() {
           ))}
         </div>
 
-        {/* Additional Info - Full Width */}
         <div className="bg-gradient-to-br from-zinc-800/90 to-zinc-900/90 border border-zinc-700/50 rounded-3xl p-8 backdrop-blur-sm shadow-2xl">
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
             <span className="text-3xl">📋</span> Weitere Informationen
@@ -107,11 +103,15 @@ export default function StatistikenPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-zinc-400">
             <div className="flex items-start gap-2">
               <span className="text-emerald-400 mt-1">•</span>
-              <p className="text-lg">Spiele mehr, um deine Statistiken zu verbessern</p>
+              <p className="text-lg">
+                Spiele mehr, um deine Statistiken zu verbessern
+              </p>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-emerald-400 mt-1">•</span>
-              <p className="text-lg">Deine Bestleistungen werden hier angezeigt</p>
+              <p className="text-lg">
+                Deine Bestleistungen werden hier angezeigt
+              </p>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-emerald-400 mt-1">•</span>

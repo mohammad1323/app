@@ -10,16 +10,20 @@ export interface GameStats {
   totalPlayTime: number;
   selectedSkin: string;
   ownedSkins: string[];
+  playerName: string;
+  profileIcon: string;
 }
 
 const DEFAULT_STATS: GameStats = {
   gamesPlayed: 0,
   bestScore: 0,
   totalApplesEaten: 0,
-  totalCoins: 100, // Starting coins
+  totalCoins: 100,
   totalPlayTime: 0,
   selectedSkin: "default",
   ownedSkins: ["default"],
+  playerName: "Spieler",
+  profileIcon: "👤",
 };
 
 const STORAGE_KEY = "snake_game_stats";
@@ -28,7 +32,6 @@ export function useGameState() {
   const [stats, setStats] = useState<GameStats>(DEFAULT_STATS);
 
   useEffect(() => {
-    // Load from localStorage
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
@@ -46,7 +49,11 @@ export function useGameState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   };
 
-  const updateGameResult = (score: number, applesEaten: number, gameTime: number) => {
+  const updateGameResult = (
+    score: number,
+    applesEaten: number,
+    gameTime: number,
+  ) => {
     const coinsEarned = Math.floor(score / 10) + applesEaten * 2;
     saveStats({
       gamesPlayed: stats.gamesPlayed + 1,
@@ -60,10 +67,10 @@ export function useGameState() {
 
   const purchaseSkin = (skinId: string, price: number) => {
     if (stats.ownedSkins.includes(skinId)) {
-      return false; // Already owned
+      return false;
     }
     if (stats.totalCoins < price) {
-      return false; // Not enough coins
+      return false;
     }
     saveStats({
       totalCoins: stats.totalCoins - price,
@@ -80,12 +87,21 @@ export function useGameState() {
     return false;
   };
 
+  const updatePlayerName = (name: string) => {
+    saveStats({ playerName: name });
+  };
+
+  const updateProfileIcon = (icon: string) => {
+    saveStats({ profileIcon: icon });
+  };
+
   return {
     stats,
     updateGameResult,
     purchaseSkin,
     selectSkin,
     saveStats,
+    updatePlayerName,
+    updateProfileIcon,
   };
 }
-
