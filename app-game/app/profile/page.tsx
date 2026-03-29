@@ -1,392 +1,313 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useGameState } from "../hooks/useGameState";
+import { useState } from "react"
+import { NavBar } from "@/app/components/nav-bar"
+import { Button } from "@/app/components/ui/button"
+import { Input } from "@/app/components/ui/input"
+import { useGameStore } from "@/app/lib/game-store"
+import {
+  Edit3,
+  Check,
+  X,
+  Trophy,
+  Gamepad2,
+  Target,
+  Zap,
+  Clock,
+  Award,
+  Flame,
+  Utensils,
+  Ruler,
+  Palette,
+  Repeat,
+  Lock,
+} from "lucide-react"
+import { cn } from "@/app/lib/utils"
 
-const PROFILE_ICONS = [
-  "👤",
-  "🐍",
-  "🎮",
-  "⭐",
-  "👑",
-  "🔥",
-  "💎",
-  "🌟",
-  "🎯",
-  "🏆",
-  "💪",
-  "🚀",
-];
+const avatarOptions = [
+  { id: "snake", color: "#22c55e" },
+  { id: "fire", color: "#f97316" },
+  { id: "ice", color: "#3b82f6" },
+  { id: "purple", color: "#a855f7" },
+  { id: "gold", color: "#fbbf24" },
+  { id: "pink", color: "#ec4899" },
+]
+
+const achievementIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  gamepad: Gamepad2,
+  target: Target,
+  trophy: Trophy,
+  repeat: Repeat,
+  flame: Flame,
+  utensils: Utensils,
+  ruler: Ruler,
+  palette: Palette,
+}
 
 export default function ProfilePage() {
-  const { stats, updatePlayerName, updateProfileIcon } = useGameState();
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [newName, setNewName] = useState(stats.playerName);
-  const [showIconSelector, setShowIconSelector] = useState(false);
-
-
-  const getRank = () => {
-    if (stats.bestScore >= 500)
-      return { name: "Meister", icon: "👑", color: "text-yellow-400" };
-    if (stats.bestScore >= 300)
-      return { name: "Experte", icon: "⭐", color: "text-purple-400" };
-    if (stats.bestScore >= 150)
-      return { name: "Fortgeschritten", icon: "🎯", color: "text-blue-400" };
-    if (stats.bestScore >= 50)
-      return { name: "Anfänger", icon: "🌱", color: "text-green-400" };
-    return { name: "Neuling", icon: "🌿", color: "text-zinc-400" };
-  };
-
-  const rank = getRank();
+  const { profile, stats, achievements, updateProfile } = useGameStore()
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [tempName, setTempName] = useState(profile.name)
+  const [activeSection, setActiveSection] = useState<"stats" | "achievements">("stats")
 
   const handleSaveName = () => {
-    if (newName.trim()) {
-      updatePlayerName(newName.trim());
-      setIsEditingName(false);
+    if (tempName.trim()) {
+      updateProfile({ name: tempName.trim() })
     }
-  };
+    setIsEditingName(false)
+  }
 
-  const achievements = [
-    {
-      id: "games10",
-      label: "10 Spiele",
-      icon: "🎮",
-      condition: stats.gamesPlayed >= 10,
-      progress: stats.gamesPlayed,
-      target: 10,
-    },
-    {
-      id: "games50",
-      label: "50 Spiele",
-      icon: "🎯",
-      condition: stats.gamesPlayed >= 50,
-      progress: stats.gamesPlayed,
-      target: 50,
-    },
-    {
-      id: "games100",
-      label: "100 Spiele",
-      icon: "🏅",
-      condition: stats.gamesPlayed >= 100,
-      progress: stats.gamesPlayed,
-      target: 100,
-    },
-    {
-      id: "score100",
-      label: "100 Punkte",
-      icon: "⭐",
-      condition: stats.bestScore >= 100,
-      progress: stats.bestScore,
-      target: 100,
-    },
-    {
-      id: "score250",
-      label: "250 Punkte",
-      icon: "🌟",
-      condition: stats.bestScore >= 250,
-      progress: stats.bestScore,
-      target: 250,
-    },
-    {
-      id: "score500",
-      label: "500 Punkte",
-      icon: "👑",
-      condition: stats.bestScore >= 500,
-      progress: stats.bestScore,
-      target: 500,
-    },
-    {
-      id: "apples50",
-      label: "50 Äpfel",
-      icon: "🍎",
-      condition: stats.totalApplesEaten >= 50,
-      progress: stats.totalApplesEaten,
-      target: 50,
-    },
-    {
-      id: "apples200",
-      label: "200 Äpfel",
-      icon: "🍏",
-      condition: stats.totalApplesEaten >= 200,
-      progress: stats.totalApplesEaten,
-      target: 200,
-    },
-    {
-      id: "apples500",
-      label: "500 Äpfel",
-      icon: "🍇",
-      condition: stats.totalApplesEaten >= 500,
-      progress: stats.totalApplesEaten,
-      target: 500,
-    },
-    {
-      id: "skins4",
-      label: "Skin Sammler",
-      icon: "🎨",
-      condition: stats.ownedSkins.length >= 4,
-      progress: stats.ownedSkins.length,
-      target: 4,
-    },
-    {
-      id: "skins10",
-      label: "Skin Meister",
-      icon: "🌈",
-      condition: stats.ownedSkins.length >= 10,
-      progress: stats.ownedSkins.length,
-      target: 10,
-    },
-    {
-      id: "coins500",
-      label: "500 Münzen",
-      icon: "💰",
-      condition: stats.totalCoins >= 500,
-      progress: stats.totalCoins,
-      target: 500,
-    },
-    {
-      id: "coins1000",
-      label: "1000 Münzen",
-      icon: "💎",
-      condition: stats.totalCoins >= 1000,
-      progress: stats.totalCoins,
-      target: 1000,
-    },
-  ];
+  const handleCancelEdit = () => {
+    setTempName(profile.name)
+    setIsEditingName(false)
+  }
+
+  const xpForNextLevel = profile.level * 100
+  const xpProgress = (profile.xp / xpForNextLevel) * 100
+
+  const unlockedAchievements = achievements.filter((a) => a.unlocked).length
+  const totalAchievements = achievements.length
 
   return (
-    <div className="h-full w-full px-4 md:px-8 lg:px-12 py-4 md:py-8 overflow-auto bg-black">
-      <div className="w-full h-full flex flex-col">
-        <div className="mb-6 md:mb-8">
-          <div className="flex items-center gap-4 md:gap-6 mb-4">
-            <div
-              className="relative w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center text-5xl md:text-6xl lg:text-7xl shadow-2xl shadow-emerald-500/50 cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => setShowIconSelector(true)}
-            >
-              {stats.profileIcon}
-              <div className="absolute bottom-0 right-0 bg-emerald-500 rounded-full p-2 text-xs">
-                ✏️
-              </div>
-            </div>
-            <div className="flex-1">
-              {isEditingName ? (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && handleSaveName()}
-                    className="bg-zinc-800 border border-emerald-500 rounded-xl px-4 py-2 text-white text-2xl md:text-3xl font-bold flex-1"
-                    autoFocus
-                  />
-                  <button
-                    onClick={handleSaveName}
-                    className="px-4 py-2 bg-emerald-500 rounded-xl text-white font-bold"
-                  >
-                    ✓
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsEditingName(false);
-                      setNewName(stats.playerName);
-                    }}
-                    className="px-4 py-2 bg-zinc-800 rounded-xl text-white font-bold"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-emerald-400 via-green-400 to-emerald-500 bg-clip-text text-transparent">
-                    {stats.playerName}
-                  </h1>
-                  <button
-                    onClick={() => setIsEditingName(true)}
-                    className="text-zinc-400 hover:text-emerald-400 text-2xl transition-colors"
-                  >
-                    ✏️
-                  </button>
-                </div>
-              )}
-              <p className="text-base md:text-lg text-zinc-400 mt-2">
-                Deine Spielstatistiken
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 flex-1 overflow-y-auto">
-          <div className="bg-black/60 border border-zinc-800/50 rounded-2xl p-5 md:p-6 backdrop-blur-sm">
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-5 flex items-center gap-2">
-              <span className="text-3xl">👤</span> Informationen
-            </h2>
-            <div className="space-y-3 md:space-y-4">
-              <div className="flex items-center justify-between p-4 md:p-5 bg-zinc-900/50 rounded-xl">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl md:text-3xl">{rank.icon}</span>
-                  <div>
-                    <p className="text-xs md:text-sm text-zinc-400 mb-1">
-                      Rang
-                    </p>
-                    <p
-                      className={`font-semibold text-base md:text-lg ${rank.color}`}
-                    >
-                      {rank.name}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-4 md:p-5 bg-zinc-900/50 rounded-xl">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl md:text-3xl">🪙</span>
-                  <div>
-                    <p className="text-xs md:text-sm text-zinc-400 mb-1">
-                      Münzen
-                    </p>
-                    <p className="font-semibold text-white text-base md:text-lg tabular-nums">
-                      {stats.totalCoins}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-4 md:p-5 bg-zinc-900/50 rounded-xl">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl md:text-3xl">🎨</span>
-                  <div>
-                    <p className="text-xs md:text-sm text-zinc-400 mb-1">
-                      Aktiver Skin
-                    </p>
-                    <p className="font-semibold text-white text-base md:text-lg capitalize">
-                      {stats.selectedSkin}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-4 md:p-5 bg-zinc-900/50 rounded-xl">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl md:text-3xl">🏆</span>
-                  <div>
-                    <p className="text-xs md:text-sm text-zinc-400 mb-1">
-                      Erfolge
-                    </p>
-                    <p className="font-semibold text-white text-base md:text-lg">
-                      {achievements.filter((a) => a.condition).length} /{" "}
-                      {achievements.length}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-black/60 border border-zinc-800/50 rounded-2xl p-5 md:p-6 backdrop-blur-sm">
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-5 flex items-center gap-2">
-              <span className="text-3xl">📊</span> Statistiken
-            </h2>
-            <div className="grid grid-cols-2 gap-3 md:gap-4">
-              <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 md:p-5">
-                <div className="text-3xl md:text-4xl mb-2">🎯</div>
-                <p className="text-xs md:text-sm text-zinc-400 mb-2 font-medium">
-                  Spiele
-                </p>
-                <p className="text-2xl md:text-3xl font-bold text-blue-400 tabular-nums">
-                  {stats.gamesPlayed}
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-xl p-4 md:p-5">
-                <div className="text-3xl md:text-4xl mb-2">⭐</div>
-                <p className="text-xs md:text-sm text-zinc-400 mb-2 font-medium">
-                  Bester
-                </p>
-                <p className="text-2xl md:text-3xl font-bold text-yellow-400 tabular-nums">
-                  {stats.bestScore}
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-red-500/20 to-red-600/20 border border-red-500/30 rounded-xl p-4 md:p-5">
-                <div className="text-3xl md:text-4xl mb-2">🍎</div>
-                <p className="text-xs md:text-sm text-zinc-400 mb-2 font-medium">
-                  Äpfel
-                </p>
-                <p className="text-2xl md:text-3xl font-bold text-red-400 tabular-nums">
-                  {stats.totalApplesEaten}
-                </p>
-              </div>
-             </div>
-          </div>
-
-          <div className="bg-black/60 border border-zinc-800/50 rounded-2xl p-5 md:p-6 backdrop-blur-sm overflow-y-auto">
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-5 flex items-center gap-2">
-              <span className="text-3xl">🏆</span> Erfolge
-            </h2>
-            <div className="space-y-2 md:space-y-3">
-              {achievements.map((achievement) => (
+    <div className="min-h-screen bg-background">
+      <NavBar />
+      
+      <main className="mx-auto max-w-5xl px-4 py-8 pb-24 md:pb-8">
+        {/* Profile Header */}
+        <section className="relative mb-8 overflow-hidden rounded-2xl border border-border bg-card">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
+          
+          <div className="relative p-6 md:p-8">
+            <div className="flex flex-col items-center gap-6 md:flex-row md:items-start">
+              {/* Avatar */}
+              <div className="relative">
                 <div
-                  key={achievement.id}
-                  className={`flex items-center gap-3 p-3 md:p-4 rounded-xl border-2 transition-all duration-200 ${
-                    achievement.condition
-                      ? "border-yellow-500/50 bg-yellow-500/10"
-                      : "border-zinc-800 bg-zinc-900/30 opacity-60"
-                  }`}
+                  className="flex h-24 w-24 items-center justify-center rounded-2xl text-3xl font-bold text-background shadow-lg md:h-28 md:w-28"
+                  style={{
+                    backgroundColor: avatarOptions.find((a) => a.id === profile.avatar)?.color || "#22c55e",
+                    boxShadow: `0 0 40px ${avatarOptions.find((a) => a.id === profile.avatar)?.color}40`,
+                  }}
                 >
-                  <span className="text-2xl md:text-3xl">
-                    {achievement.condition ? "🏅" : "🔒"}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-white text-sm md:text-base truncate">
-                      {achievement.label}
-                    </p>
-                    <p className="text-xs md:text-sm text-zinc-400">
-                      {achievement.condition
-                        ? "Erreicht!"
-                        : `${achievement.progress} / ${achievement.target}`}
-                    </p>
+                  {profile.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-background text-sm font-bold text-primary ring-2 ring-primary">
+                  {profile.level}
+                </div>
+              </div>
+
+              {/* Info */}
+              <div className="flex-1 text-center md:text-left">
+                {/* Name */}
+                <div className="mb-2 flex items-center justify-center gap-2 md:justify-start">
+                  {isEditingName ? (
+                    <div className="flex items-center gap-2">
+                      <Input
+                        value={tempName}
+                        onChange={(e) => setTempName(e.target.value)}
+                        className="h-10 w-48 text-lg font-bold"
+                        maxLength={20}
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleSaveName()
+                          if (e.key === "Escape") handleCancelEdit()
+                        }}
+                      />
+                      <Button size="icon" variant="ghost" onClick={handleSaveName} className="h-8 w-8 text-primary">
+                        <Check className="h-4 w-4" />
+                      </Button>
+                      <Button size="icon" variant="ghost" onClick={handleCancelEdit} className="h-8 w-8 text-muted-foreground">
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <h1 className="text-2xl font-bold md:text-3xl">{profile.name}</h1>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => setIsEditingName(true)}
+                        className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                      >
+                        <Edit3 className="h-4 w-4" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                <p className="mb-4 text-muted-foreground">Level {profile.level} Player</p>
+
+                {/* XP Progress */}
+                <div className="mb-4">
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Experience</span>
+                    <span className="font-medium">{profile.xp} / {xpForNextLevel} XP</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-secondary">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all"
+                      style={{ width: `${xpProgress}%` }}
+                    />
                   </div>
                 </div>
-              ))}
+
+                {/* Avatar Selection */}
+                <div>
+                  <p className="mb-2 text-sm text-muted-foreground">Profile Color</p>
+                  <div className="flex gap-2">
+                    {avatarOptions.map((option) => (
+                      <button
+                        key={option.id}
+                        onClick={() => updateProfile({ avatar: option.id })}
+                        className={cn(
+                          "h-8 w-8 rounded-full transition-all",
+                          profile.avatar === option.id && "ring-2 ring-foreground ring-offset-2 ring-offset-background"
+                        )}
+                        style={{ backgroundColor: option.color }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        </section>
+
+        {/* Section Tabs */}
+        <div className="mb-6 flex gap-2 rounded-lg bg-secondary/50 p-1">
+          <button
+            onClick={() => setActiveSection("stats")}
+            className={cn(
+              "flex-1 rounded-md px-4 py-2.5 text-sm font-medium transition-all",
+              activeSection === "stats"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Statistics
+          </button>
+          <button
+            onClick={() => setActiveSection("achievements")}
+            className={cn(
+              "flex-1 rounded-md px-4 py-2.5 text-sm font-medium transition-all",
+              activeSection === "achievements"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Achievements ({unlockedAchievements}/{totalAchievements})
+          </button>
         </div>
 
-        {showIconSelector && (
-          <div
-            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setShowIconSelector(false)}
-          >
-            <div
-              className="bg-black/95 border-2 border-zinc-800 rounded-3xl p-6 md:p-8 backdrop-blur-xl max-w-2xl w-full"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl md:text-3xl font-bold text-white">
-                  Profilbild wählen
-                </h2>
-                <button
-                  onClick={() => setShowIconSelector(false)}
-                  className="text-zinc-400 hover:text-white text-2xl transition-colors"
-                >
-                  ×
-                </button>
-              </div>
-              <div className="grid grid-cols-4 md:grid-cols-6 gap-4">
-                {PROFILE_ICONS.map((icon) => (
-                  <button
-                    key={icon}
-                    onClick={() => {
-                      updateProfileIcon(icon);
-                      setShowIconSelector(false);
-                    }}
-                    className={`p-4 rounded-xl text-4xl md:text-5xl transition-all duration-200 ${
-                      stats.profileIcon === icon
-                        ? "bg-emerald-500/20 border-2 border-emerald-500 scale-110"
-                        : "bg-zinc-800/50 border-2 border-zinc-700 hover:border-zinc-600"
-                    }`}
-                  >
-                    {icon}
-                  </button>
-                ))}
-              </div>
-            </div>
+        {/* Stats Section */}
+        {activeSection === "stats" && (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <StatCard icon={Gamepad2} label="Games Played" value={stats.gamesPlayed} color="text-primary" />
+            <StatCard icon={Trophy} label="High Score" value={stats.highScore} color="text-yellow-500" />
+            <StatCard icon={Target} label="Total Score" value={stats.totalScore} color="text-accent" />
+            <StatCard icon={Zap} label="Longest Snake" value={stats.longestSnake} color="text-blue-500" />
+            <StatCard icon={Utensils} label="Total Food Eaten" value={stats.totalFoodEaten} color="text-orange-500" />
+            <StatCard
+              icon={Clock}
+              label="Total Play Time"
+              value={formatTime(stats.totalPlayTime)}
+              isText
+              color="text-cyan-500"
+            />
           </div>
         )}
-      </div>
+
+        {/* Achievements Section */}
+        {activeSection === "achievements" && (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {achievements.map((achievement) => {
+              const Icon = achievementIcons[achievement.icon] || Award
+              const progress = Math.min((achievement.progress / achievement.target) * 100, 100)
+
+              return (
+                <div
+                  key={achievement.id}
+                  className={cn(
+                    "relative overflow-hidden rounded-xl border bg-card p-5 transition-all",
+                    achievement.unlocked
+                      ? "border-primary/50 shadow-lg shadow-primary/5"
+                      : "border-border opacity-75"
+                  )}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={cn(
+                        "rounded-lg p-3",
+                        achievement.unlocked ? "bg-primary/10 text-primary" : "bg-secondary text-muted-foreground"
+                      )}
+                    >
+                      {achievement.unlocked ? <Icon className="h-6 w-6" /> : <Lock className="h-6 w-6" />}
+                    </div>
+                    <div className="flex-1">
+                      <div className="mb-1 flex items-center gap-2">
+                        <h3 className="font-semibold">{achievement.name}</h3>
+                        {achievement.unlocked && (
+                          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                            Unlocked
+                          </span>
+                        )}
+                      </div>
+                      <p className="mb-3 text-sm text-muted-foreground">{achievement.description}</p>
+                      <div className="flex items-center gap-2">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
+                          <div
+                            className={cn(
+                              "h-full rounded-full transition-all",
+                              achievement.unlocked ? "bg-primary" : "bg-muted-foreground/50"
+                            )}
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-medium tabular-nums text-muted-foreground">
+                          {achievement.progress}/{achievement.target}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </main>
     </div>
-  );
+  )
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  color,
+  isText = false,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+  value: number | string
+  color: string
+  isText?: boolean
+}) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 transition-all hover:shadow-lg">
+      <div className={`mb-3 inline-flex rounded-lg bg-secondary p-3 ${color}`}>
+        <Icon className="h-5 w-5" />
+      </div>
+      <p className="text-2xl font-bold tabular-nums">
+        {isText ? value : (value as number).toLocaleString()}
+      </p>
+      <p className="text-sm text-muted-foreground">{label}</p>
+    </div>
+  )
+}
+
+function formatTime(seconds: number): string {
+  if (seconds < 60) return `${seconds}s`
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${seconds % 60}s`
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  return `${hours}h ${minutes}m`
 }

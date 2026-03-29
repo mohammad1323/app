@@ -1,167 +1,169 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import SnakeGame from "./components/SnakeGame";
-import GameModeSelector from "./components/GameModeSelector";
-import { useGameState } from "./hooks/useGameState";
-
-type GameModeType = "classic" | "speed" | "noWalls";
-type MapSizeType = "small" | "medium" | "large";
+import Link from "next/link"
+import { Button } from "@/app/components/ui/button"
+import { NavBar } from "@/app/components/nav-bar"
+import { useGameStore } from "@/app/lib/game-store"
+import { Play, ShoppingBag, User, Trophy, Zap, Target, Gamepad2 } from "lucide-react"
 
 export default function HomePage() {
-  const { stats, updateGameResult } = useGameState();
-  const [gameMode, setGameMode] = useState<GameModeType>("classic");
-  const [mapSize, setMapSize] = useState<MapSizeType>("medium");
-  const [showGame, setShowGame] = useState(false);
-  const [showModeSelector, setShowModeSelector] = useState(false);
-
-  useEffect(() => {
-    if (showGame) {
-      document.body.style.overflow = "hidden";
-
-      const navs = document.querySelectorAll("nav");
-      navs.forEach((nav) => {
-        (nav as HTMLElement).style.display = "none";
-      });
-    } else {
-      document.body.style.overflow = "";
-
-      const navs = document.querySelectorAll("nav");
-      navs.forEach((nav) => {
-        (nav as HTMLElement).style.display = "";
-      });
-    }
-    return () => {
-      document.body.style.overflow = "";
-      const navs = document.querySelectorAll("nav");
-      navs.forEach((nav) => {
-        (nav as HTMLElement).style.display = "";
-      });
-    };
-  }, [showGame]);
-
-  const handleModeSelect = (mode: GameModeType, size: MapSizeType) => {
-    setGameMode(mode);
-    setMapSize(size);
-    setShowModeSelector(false);
-    setShowGame(true);
-  };
-
-  const handleGameEnd = (gameStats: {
-    score: number;
-    applesEaten: number;
-    gameTime: number;
-  }) => {
-    const coinsEarned = updateGameResult(
-      gameStats.score,
-      gameStats.applesEaten,
-      gameStats.gameTime,
-    );
-  };
-
-  if (showGame) {
-    return (
-      <div
-        className="fixed inset-0 w-screen h-screen bg-black"
-        style={{ width: "100vw", height: "100vh" }}
-      >
-        <SnakeGame
-          selectedSkin={stats.selectedSkin}
-          mapSize={mapSize}
-          gameMode={gameMode}
-          onGameEnd={handleGameEnd}
-          onBack={() => setShowGame(false)}
-        />
-      </div>
-    );
-  }
+  const { profile, stats } = useGameStore()
 
   return (
-    <div className="h-full w-full px-4 md:px-8 py-4 md:py-8 overflow-auto bg-black">
-      <div className="w-full h-full flex flex-col items-center justify-center">
-        <div className="mb-8 md:mb-12 text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-emerald-400 via-green-400 to-emerald-500 bg-clip-text text-transparent mb-3">
-            Willkommen!
-          </h1>
-          <p className="text-lg md:text-2xl text-zinc-400">
-            Bereit für dein nächstes Abenteuer?
-          </p>
-        </div>
+    <div className="min-h-screen bg-background">
+      <NavBar />
+      
+      <main className="mx-auto max-w-5xl px-4 py-8 pb-24 md:pb-8">
+        {/* Hero Section */}
+        <section className="relative mb-12 overflow-hidden rounded-2xl border border-border bg-card p-8 md:p-12">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent" />
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-accent/10 blur-3xl" />
+          
+          <div className="relative z-10">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
+              <Zap className="h-4 w-4" />
+              Level {profile.level} Player
+            </div>
+            
+            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+              Welcome back,{" "}
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                {profile.name}
+              </span>
+            </h1>
+            
+            <p className="mb-8 max-w-xl text-lg text-muted-foreground">
+              Ready to beat your high score? Collect coins, unlock new skins, and climb the ranks.
+            </p>
+            
+            <div className="flex flex-wrap gap-4">
+              <Button asChild size="lg" className="gap-2 bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90">
+                <Link href="/play">
+                  <Play className="h-5 w-5" />
+                  Play Now
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="gap-2">
+                <Link href="/shop">
+                  <ShoppingBag className="h-5 w-5" />
+                  Visit Shop
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
 
-        <div className="grid grid-cols-3 gap-4 md:gap-6 mb-12 w-full max-w-2xl">
-          <div className="bg-black/60 border border-blue-500/30 rounded-2xl p-5 md:p-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-zinc-400 text-xs md:text-sm">Spiele</span>
-              <span className="text-2xl md:text-3xl">🎯</span>
-            </div>
-            <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-400 tabular-nums">
-              {stats.gamesPlayed}
-            </p>
+        {/* Stats Grid */}
+        <section className="mb-12">
+          <h2 className="mb-6 text-xl font-semibold">Your Stats</h2>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <StatCard
+              icon={Gamepad2}
+              label="Games Played"
+              value={stats.gamesPlayed}
+              color="text-primary"
+            />
+            <StatCard
+              icon={Trophy}
+              label="High Score"
+              value={stats.highScore}
+              color="text-yellow-500"
+            />
+            <StatCard
+              icon={Target}
+              label="Total Score"
+              value={stats.totalScore}
+              color="text-accent"
+            />
+            <StatCard
+              icon={Zap}
+              label="Longest Snake"
+              value={stats.longestSnake}
+              color="text-blue-500"
+            />
           </div>
-          <div className="bg-black/60 border border-yellow-500/30 rounded-2xl p-5 md:p-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-zinc-400 text-xs md:text-sm">Bester</span>
-              <span className="text-2xl md:text-3xl">⭐</span>
-            </div>
-            <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-yellow-400 tabular-nums">
-              {stats.bestScore}
-            </p>
-          </div>
-          <div className="bg-black/60 border border-amber-500/30 rounded-2xl p-5 md:p-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-zinc-400 text-xs md:text-sm">Münzen</span>
-              <span className="text-2xl md:text-3xl"></span>
-            </div>
-            <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-amber-400 tabular-nums">
-              {stats.totalCoins}
-            </p>
-          </div>
-        </div>
+        </section>
 
-        <div className="bg-black/60 border border-zinc-800/50 rounded-3xl p-8 md:p-12 lg:p-16 backdrop-blur-sm mb-8 w-full max-w-2xl">
-          <div className="text-center">
-            <div className="text-8xl md:text-9xl lg:text-[12rem] mb-6">🐍</div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-              Snake Spiel
-            </h2>
-            <p className="text-zinc-400 mb-10 text-base md:text-lg lg:text-xl">
-              Sammle Äpfel und werde immer länger!
-            </p>
-            <button
-              onClick={() => setShowModeSelector(true)}
-              className="w-full py-6 md:py-8 lg:py-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl font-bold text-2xl md:text-3xl lg:text-4xl text-white shadow-xl shadow-emerald-500/50 active:scale-95 hover:shadow-emerald-500/70 transition-all duration-200"
-            >
-              🎮 Spiel starten
-            </button>
+        {/* Quick Links */}
+        <section>
+          <h2 className="mb-6 text-xl font-semibold">Quick Access</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <QuickLinkCard
+              href="/play"
+              icon={Play}
+              title="Play Game"
+              description="Start a new game and climb the leaderboard"
+              color="bg-primary/10 text-primary"
+            />
+            <QuickLinkCard
+              href="/shop"
+              icon={ShoppingBag}
+              title="Shop"
+              description="Browse and unlock new snake skins"
+              color="bg-accent/10 text-accent"
+            />
+            <QuickLinkCard
+              href="/profile"
+              icon={User}
+              title="Profile"
+              description="View achievements and customize your profile"
+              color="bg-blue-500/10 text-blue-500"
+            />
           </div>
-        </div>
-
-        {showModeSelector && (
-          <div
-            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setShowModeSelector(false)}
-          >
-            <div
-              className="bg-black/95 border-2 border-zinc-800 rounded-3xl p-6 md:p-8 w-full backdrop-blur-xl"
-              style={{ maxWidth: "600px" }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl md:text-3xl font-bold text-white">
-                  Spiel starten
-                </h2>
-                <button
-                  onClick={() => setShowModeSelector(false)}
-                  className="text-zinc-400 hover:text-white text-2xl transition-colors"
-                >
-                  ×
-                </button>
-              </div>
-              <GameModeSelector onModeSelect={handleModeSelect} />
-            </div>
-          </div>
-        )}
-      </div>
+        </section>
+      </main>
     </div>
-  );
+  )
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  color,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+  value: number
+  color: string
+}) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-4 transition-all hover:border-border/80 hover:shadow-lg">
+      <div className={`mb-3 inline-flex rounded-lg bg-secondary p-2.5 ${color}`}>
+        <Icon className="h-5 w-5" />
+      </div>
+      <p className="text-2xl font-bold tabular-nums">{value.toLocaleString()}</p>
+      <p className="text-sm text-muted-foreground">{label}</p>
+    </div>
+  )
+}
+
+function QuickLinkCard({
+  href,
+  icon: Icon,
+  title,
+  description,
+  color,
+}: {
+  href: string
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  description: string
+  color: string
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex items-start gap-4 rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5"
+    >
+      <div className={`rounded-lg p-3 ${color} transition-transform group-hover:scale-110`}>
+        <Icon className="h-6 w-6" />
+      </div>
+      <div>
+        <h3 className="mb-1 font-semibold">{title}</h3>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </div>
+    </Link>
+  )
 }
