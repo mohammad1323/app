@@ -51,14 +51,7 @@ export default function PlayPage() {
                       {score}
                     </p>
                   </div>
-                  <div className="bg-zinc-800/50 rounded-xl px-6 py-3 border border-zinc-700/50">
-                    <p className="text-xs text-zinc-400 mb-1">Zeit</p>
-                    <p className="text-3xl font-bold text-blue-400">
-                      {timeLeft}s
-                    </p>
                   </div>
-                </div>
-
                 <div className="bg-zinc-900/50 rounded-2xl p-8 border border-zinc-700/30 flex-1 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-7xl mb-6">🎯</div>

@@ -110,30 +110,6 @@ const AVAILABLE_SKINS: Skin[] = [
     color: "#14b8a6",
     description: "Ein ozeanblauer türkiser Snake",
   },
-  {
-    id: "violet",
-    name: "Violett",
-    price: 85,
-    icon: "🔮",
-    color: "#8b5cf6",
-    description: "Ein magischer violetter Snake",
-  },
-  {
-    id: "emerald",
-    name: "Smaragd",
-    price: 90,
-    icon: "💚",
-    color: "#10b981",
-    description: "Ein edler smaragdgrüner Snake",
-  },
-  {
-    id: "crimson",
-    name: "Karmesin",
-    price: 95,
-    icon: "❤️",
-    color: "#dc2626",
-    description: "Ein leidenschaftlicher karmesinroter Snake",
-  },
 ];
 
 export default function ShopPage() {
@@ -157,30 +133,49 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="h-full w-full px-4 md:px-8 lg:px-12 py-4 md:py-8 overflow-auto bg-black">
-      <div className="w-full h-full flex flex-col">
+    <div className="relative h-full w-full px-4 md:px-8 lg:px-12 py-4 md:py-8 overflow-auto bg-[#050508] min-h-0">
+      {/* Arcade grid background */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 245, 255, 0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 245, 255, 0.15) 1px, transparent 1px)
+          `,
+          backgroundSize: "24px 24px",
+        }}
+      />
+
+      <div className="relative z-10 w-full h-full flex flex-col">
+        {/* Header */}
         <div className="mb-6 md:mb-8 text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent mb-3">
-            Shop
+          <h1
+            className="text-4xl md:text-6xl lg:text-7xl font-black tracking-[0.3em] md:tracking-[0.4em] text-transparent mb-3"
+            style={{
+              color: "#00f5ff",
+              textShadow: `
+                0 0 10px #00f5ff,
+                0 0 20px #00f5ff,
+                0 0 40px #00f5ff,
+                0 0 80px rgba(0, 245, 255, 0.5)
+              `,
+            }}
+          >
+            SHOP
           </h1>
-          <p className="text-lg md:text-2xl text-zinc-400">
-            Kaufe coole Skins für deinen Snake!
+          <p
+            className="text-sm md:text-lg tracking-widest uppercase"
+            style={{
+              color: "rgba(255, 45, 149, 0.9)",
+              textShadow: "0 0 12px rgba(255, 45, 149, 0.6)",
+            }}
+          >
+            Skins für deinen Snake
           </p>
         </div>
 
-        <div className="mb-8 bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border border-amber-500/30 px-6 md:px-8 py-5 md:py-6 rounded-2xl backdrop-blur-sm max-w-md mx-auto w-full">
-          <div className="flex items-center gap-4">
-            <span className="text-4xl md:text-5xl">🪙</span>
-            <div>
-              <p className="text-sm md:text-base text-zinc-400">Deine Münzen</p>
-              <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-amber-400 tabular-nums">
-                {stats.totalCoins}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-8 flex-1 overflow-y-auto">
+        {/* Skin grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8 flex-1 overflow-y-auto">
           {AVAILABLE_SKINS.map((skin) => {
             const isOwned = stats.ownedSkins.includes(skin.id);
             const isSelected = stats.selectedSkin === skin.id;
@@ -189,97 +184,173 @@ export default function ShopPage() {
             return (
               <div
                 key={skin.id}
-                className={`bg-black/60 border-2 rounded-2xl p-6 md:p-8 backdrop-blur-sm transition-all duration-200 active:scale-[0.98] ${
-                  isSelected
-                    ? "border-emerald-500 shadow-lg shadow-emerald-500/30"
-                    : "border-zinc-800"
-                } ${!canAfford ? "opacity-60" : ""}`}
+                className={`
+                  relative rounded-xl p-5 md:p-6 transition-all duration-300
+                  border-2 bg-[#0a0a0f]/90 backdrop-blur-sm
+                  ${isSelected ? "scale-[1.02]" : ""}
+                  ${!canAfford ? "opacity-50" : ""}
+                `}
+                style={{
+                  borderColor: isSelected ? "#00f5ff" : "rgba(255, 45, 149, 0.35)",
+                  boxShadow: isSelected
+                    ? "0 0 20px rgba(0, 245, 255, 0.4), 0 0 40px rgba(0, 245, 255, 0.2), inset 0 0 30px rgba(0, 245, 255, 0.05)"
+                    : "0 0 15px rgba(255, 45, 149, 0.15), inset 0 0 20px rgba(0, 0, 0, 0.3)",
+                }}
               >
-                <div className="mb-5 flex items-center justify-center h-32 md:h-40 bg-zinc-900/50 rounded-xl border border-zinc-800">
-                  <div className="flex gap-2 md:gap-3">
+                {/* Card glow line */}
+                <div
+                  className="absolute inset-x-0 top-0 h-px rounded-full opacity-80"
+                  style={{
+                    background: "linear-gradient(90deg, transparent, #00f5ff, transparent)",
+                    boxShadow: "0 0 8px #00f5ff",
+                  }}
+                />
+
+                {/* Preview area */}
+                <div
+                  className="mb-4 flex items-center justify-center h-28 md:h-36 rounded-lg border"
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    borderColor: "rgba(0, 245, 255, 0.25)",
+                    boxShadow: "inset 0 0 30px rgba(0, 0, 0, 0.5)",
+                  }}
+                >
+                  <div className="flex gap-1.5 md:gap-2">
                     {[0, 1, 2, 3].map((i) => (
                       <div
                         key={i}
-                        className="w-10 h-10 md:w-12 md:h-12 rounded"
+                        className="w-8 h-8 md:w-10 md:h-10 rounded-sm transition-transform hover:scale-110"
                         style={{
                           backgroundColor: skin.color.includes("gradient")
                             ? `hsl(${i * 60}, 70%, 50%)`
                             : skin.color,
+                          boxShadow: skin.color.includes("gradient")
+                            ? "none"
+                            : `0 0 12px ${skin.color}, 0 0 24px ${skin.color}40`,
                         }}
                       />
                     ))}
                   </div>
                 </div>
 
-                <div className="mb-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-3xl md:text-4xl">{skin.icon}</span>
-                    <h3 className="text-xl md:text-2xl font-bold text-white flex-1">
+                <div className="mb-4">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="text-2xl md:text-3xl drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+                      {skin.icon}
+                    </span>
+                    <h3
+                      className="text-lg md:text-xl font-bold flex-1 uppercase tracking-wider"
+                      style={{
+                        color: "#e4e4e7",
+                        textShadow: "0 0 10px rgba(255, 255, 255, 0.2)",
+                      }}
+                    >
                       {skin.name}
                     </h3>
                     {isSelected && (
-                      <span className="text-emerald-400 text-sm font-semibold">
-                        ✓ Aktiv
+                      <span
+                        className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded"
+                        style={{
+                          color: "#00f5ff",
+                          textShadow: "0 0 8px #00f5ff",
+                          backgroundColor: "rgba(0, 245, 255, 0.15)",
+                        }}
+                      >
+                        Aktiv
                       </span>
                     )}
                     {isOwned && !isSelected && (
-                      <span className="text-zinc-400 text-sm">Besessen</span>
+                      <span
+                        className="text-xs text-zinc-500 uppercase tracking-wider"
+                        style={{ textShadow: "0 0 6px rgba(255,255,255,0.1)" }}
+                      >
+                        Owned
+                      </span>
                     )}
                   </div>
-                  <p className="text-sm md:text-base text-zinc-400">
+                  <p className="text-xs md:text-sm text-zinc-500 leading-snug">
                     {skin.description}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-xl md:text-2xl">🪙</span>
                     <span
-                      className={`text-lg md:text-xl font-bold ${
-                        isOwned
-                          ? "text-zinc-400 line-through"
-                          : "text-amber-400"
+                      className="text-lg md:text-xl"
+                      style={{ filter: "drop-shadow(0 0 6px rgba(251, 191, 36, 0.8))" }}
+                    >
+                      🪙
+                    </span>
+                    <span
+                      className={`text-base md:text-lg font-bold tabular-nums ${
+                        isOwned ? "line-through text-zinc-500" : ""
                       }`}
+                      style={
+                        isOwned
+                          ? {}
+                          : {
+                              color: "#fbbf24",
+                              textShadow: "0 0 10px rgba(251, 191, 36, 0.7)",
+                            }
+                      }
                     >
                       {skin.price}
                     </span>
                     {isOwned && (
-                      <span className="text-xs md:text-sm text-emerald-400 font-semibold">
-                        Kostenlos
+                      <span
+                        className="text-[10px] font-bold uppercase tracking-wider"
+                        style={{
+                          color: "#22c55e",
+                          textShadow: "0 0 8px rgba(34, 197, 94, 0.6)",
+                        }}
+                      >
+                        Free
                       </span>
                     )}
                   </div>
                   <button
                     onClick={() => handlePurchase(skin)}
                     disabled={!canAfford && !isOwned}
-                    className={`px-5 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base transition-all duration-200 active:scale-95 ${
+                    className={`
+                      px-4 md:px-5 py-2 md:py-2.5 rounded-lg font-bold text-xs md:text-sm uppercase tracking-wider
+                      transition-all duration-200 active:scale-95 border-2
+                      ${!canAfford && !isOwned ? "cursor-not-allowed" : ""}
+                    `}
+                    style={
                       isSelected
-                        ? "bg-emerald-500 text-white"
+                        ? {
+                            color: "#000",
+                            backgroundColor: "#00f5ff",
+                            borderColor: "#00f5ff",
+                            boxShadow: "0 0 15px #00f5ff, 0 0 30px rgba(0, 245, 255, 0.4)",
+                          }
                         : isOwned
-                          ? "bg-zinc-800 text-white"
+                          ? {
+                              color: "#00f5ff",
+                              backgroundColor: "transparent",
+                              borderColor: "rgba(0, 245, 255, 0.5)",
+                              boxShadow: "0 0 10px rgba(0, 245, 255, 0.2)",
+                            }
                           : canAfford
-                            ? "bg-gradient-to-r from-emerald-500 to-green-500 text-white"
-                            : "bg-zinc-900 text-zinc-600 cursor-not-allowed"
-                    }`}
+                            ? {
+                                color: "#ff2d95",
+                                backgroundColor: "transparent",
+                                borderColor: "rgba(255, 45, 149, 0.7)",
+                                boxShadow: "0 0 12px rgba(255, 45, 149, 0.3)",
+                              }
+                            : {
+                                color: "#3f3f46",
+                                backgroundColor: "rgba(24, 24, 27, 0.8)",
+                                borderColor: "#27272a",
+                              }
+                    }
                   >
-                    {isSelected ? "Aktiv" : isOwned ? "Auswählen" : "Kaufen"}
+                    {isSelected ? "Aktiv" : isOwned ? "Wählen" : "Kaufen"}
                   </button>
                 </div>
               </div>
             );
           })}
-        </div>
-
-        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-2xl p-6 md:p-8">
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-4 flex items-center gap-2">
-            <span>💡</span> Wie funktioniert es?
-          </h3>
-          <ul className="space-y-2 text-zinc-300 text-sm md:text-base">
-            <li>• Spiele Snake, um Münzen zu verdienen</li>
-            <li>• Kaufe Skins im Shop mit deinen Münzen</li>
-            <li>• Wähle deinen Lieblings-Skin aus</li>
-            <li>• Je besser du spielst, desto mehr Münzen bekommst du!</li>
-          </ul>
         </div>
       </div>
     </div>

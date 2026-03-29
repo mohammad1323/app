@@ -10,7 +10,6 @@ interface Position {
 interface GameStats {
   score: number;
   applesEaten: number;
-  gameTime: number;
 }
 
 export type GameMode = "classic" | "speed" | "noWalls";
@@ -144,7 +143,6 @@ export default function SnakeGame({
       head.x += newDirection.x;
       head.y += newDirection.y;
 
-      // Handle wall wrapping for noWalls mode
       const allowWalls = gameMode === "noWalls";
       if (allowWalls) {
         const wrapped = wrapPosition(head);
@@ -159,7 +157,6 @@ export default function SnakeGame({
           onGameEnd({
             score,
             applesEaten,
-            gameTime,
           });
         }
         return prevSnake;

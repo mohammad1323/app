@@ -25,7 +25,7 @@ export default function TopNav() {
           </Link>
           <div className="bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border border-amber-500/30 px-3 md:px-4 py-2 rounded-xl backdrop-blur-sm">
             <div className="flex items-center gap-2">
-              <span className="text-lg md:text-xl">🪙</span>
+              <span className="text-lg md:text-xl"></span>
               <div>
                 <p className="text-[10px] text-zinc-400 hidden sm:block">
                   Münzen

@@ -24,18 +24,6 @@ export default function ProfilePage() {
   const [newName, setNewName] = useState(stats.playerName);
   const [showIconSelector, setShowIconSelector] = useState(false);
 
-  const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    }
-    if (minutes > 0) {
-      return `${minutes}m ${secs}s`;
-    }
-    return `${secs}s`;
-  };
 
   const getRank = () => {
     if (stats.bestScore >= 500)
@@ -146,22 +134,6 @@ export default function ProfilePage() {
       condition: stats.ownedSkins.length >= 10,
       progress: stats.ownedSkins.length,
       target: 10,
-    },
-    {
-      id: "time30",
-      label: "30 Min Spielzeit",
-      icon: "⏰",
-      condition: stats.totalPlayTime >= 1800,
-      progress: stats.totalPlayTime,
-      target: 1800,
-    },
-    {
-      id: "time60",
-      label: "1 Stunde Spielzeit",
-      icon: "⏱️",
-      condition: stats.totalPlayTime >= 3600,
-      progress: stats.totalPlayTime,
-      target: 3600,
     },
     {
       id: "coins500",
@@ -337,16 +309,7 @@ export default function ProfilePage() {
                   {stats.totalApplesEaten}
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 md:p-5">
-                <div className="text-3xl md:text-4xl mb-2">⏱️</div>
-                <p className="text-xs md:text-sm text-zinc-400 mb-2 font-medium">
-                  Zeit
-                </p>
-                <p className="text-lg md:text-xl font-bold text-purple-400 tabular-nums">
-                  {formatTime(stats.totalPlayTime)}
-                </p>
-              </div>
-            </div>
+             </div>
           </div>
 
           <div className="bg-black/60 border border-zinc-800/50 rounded-2xl p-5 md:p-6 backdrop-blur-sm overflow-y-auto">

@@ -110,7 +110,7 @@ export default function HomePage() {
           <div className="bg-black/60 border border-amber-500/30 rounded-2xl p-5 md:p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-3">
               <span className="text-zinc-400 text-xs md:text-sm">Münzen</span>
-              <span className="text-2xl md:text-3xl">🪙</span>
+              <span className="text-2xl md:text-3xl"></span>
             </div>
             <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-amber-400 tabular-nums">
               {stats.totalCoins}
